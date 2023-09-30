@@ -2,15 +2,14 @@ package com.gayshit.repentance.events;
 
 import com.gayshit.repentance.items.Bible;
 import com.gayshit.repentance.structures.Cross;
+import com.gayshit.repentance.util.enums.StructureDirection;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -30,7 +29,6 @@ public class RepentanceEvents implements Listener {
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
         Player eventPlayer = event.getPlayer();
-        World world = eventPlayer.getWorld();
         Location playerLocation = eventPlayer.getLocation();
 
         if (!(eventPlayer.isSneaking() &&
@@ -79,13 +77,13 @@ public class RepentanceEvents implements Listener {
         }.runTaskLater(plugin, 20);
 
         if (-45 <= playerYaw && playerYaw <= 45) {
-            Cross.build(player, startX, startY, startZ, 0);
+            Cross.build(player, startX, startY, startZ, StructureDirection.SOUTH);
         } else if (45 <= playerYaw && playerYaw <= 135) {
-            Cross.build(player, startX, startY, startZ, 1);
+            Cross.build(player, startX, startY, startZ, StructureDirection.WEST);
         } else if (135 <= playerYaw || playerYaw <= -135) {
-            Cross.build(player, startX, startY, startZ, 2);
+            Cross.build(player, startX, startY, startZ, StructureDirection.NORTH);
         } else  {
-            Cross.build(player, startX, startY, startZ, 3);
+            Cross.build(player, startX, startY, startZ, StructureDirection.EAST);
         }
     }
 }

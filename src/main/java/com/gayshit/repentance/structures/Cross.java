@@ -3,6 +3,7 @@ package com.gayshit.repentance.structures;
 import com.gayshit.repentance.util.NPC;
 import com.gayshit.repentance.util.StructureBuilder;
 import com.gayshit.repentance.util.enums.NPCSkin;
+import com.gayshit.repentance.util.enums.StructureDirection;
 import com.xxmicloxx.NoteBlockAPI.model.Song;
 import com.xxmicloxx.NoteBlockAPI.songplayer.EntitySongPlayer;
 import com.xxmicloxx.NoteBlockAPI.utils.NBSDecoder;
@@ -24,43 +25,43 @@ public class Cross {
     public static void init(JavaPlugin plugin) {
         Cross.plugin = plugin;
     }
-    private static Map<Vector, Material> getStructureMap(int variant) {
+    private static Map<Vector, Material> getStructureMap(StructureDirection structureDirection) {
         Map<Vector, Material> structureMap = new HashMap<>();
 
         // shaft
         for (int y = 0; y < 10; y++) {
-            addBlockToStructure(structureMap, variant, 0, y, 0, Material.OAK_LOG);
+            addBlockToStructure(structureMap, 0, y, 0, Material.OAK_LOG, structureDirection);
         }
 
         // another shaft ig?
         for (int horizontal1 = -2; horizontal1 <= 2; horizontal1++) {
-            addBlockToStructure(structureMap, variant, horizontal1, 7, 0, Material.OAK_WOOD);
+            addBlockToStructure(structureMap, horizontal1, 7, 0, Material.OAK_WOOD, structureDirection);
         }
 
         // dirt
         for (int horizontal1 = -1; horizontal1  <= 1; horizontal1++) {
             for (int horizontal2 = -1; horizontal2  <= 1; horizontal2++) {
-                addBlockToStructure(structureMap, variant, horizontal1, 0, horizontal2, Material.ROOTED_DIRT);
+                addBlockToStructure(structureMap, horizontal1, 0, horizontal2, Material.ROOTED_DIRT, structureDirection);
             }
         }
-        addBlockToStructure(structureMap, variant, 2, 0, 0, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, -2, 0, 0, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, 0, 0, 2, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, 0, 0, -2, Material.ROOTED_DIRT);
+        addBlockToStructure(structureMap, 2, 0, 0, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, -2, 0, 0, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, 0, 0, 2, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, 0, 0, -2, Material.ROOTED_DIRT, structureDirection);
 
-        addBlockToStructure(structureMap, variant, 1, 1, 0, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, -1, 1, 0, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, 0, 1, 1, Material.ROOTED_DIRT);
-        addBlockToStructure(structureMap, variant, 0, 1, -1, Material.ROOTED_DIRT);
+        addBlockToStructure(structureMap, 1, 1, 0, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, -1, 1, 0, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, 0, 1, 1, Material.ROOTED_DIRT, structureDirection);
+        addBlockToStructure(structureMap, 0, 1, -1, Material.ROOTED_DIRT, structureDirection);
 
-        addBlockToStructure(structureMap, variant, 1, 2, 0, Material.IRON_BARS);
-        addBlockToStructure(structureMap, variant, -1, 1, 1, Material.IRON_BARS);
+        addBlockToStructure(structureMap, 1, 2, 0, Material.IRON_BARS, structureDirection);
+        addBlockToStructure(structureMap, -1, 1, 1, Material.IRON_BARS, structureDirection);
 
-        addBlockToStructure(structureMap, variant, -1, 2, 0, Material.DEAD_BUSH);
-        addBlockToStructure(structureMap, variant, 2, 1, 0, Material.DEAD_BUSH);
-        addBlockToStructure(structureMap, variant, 0, 1, 2, Material.DEAD_BUSH);
+        addBlockToStructure(structureMap, -1, 2, 0, Material.DEAD_BUSH, structureDirection);
+        addBlockToStructure(structureMap, 2, 1, 0, Material.DEAD_BUSH, structureDirection);
+        addBlockToStructure(structureMap, 0, 1, 2, Material.DEAD_BUSH, structureDirection);
 
-        addBlockToStructure(structureMap, variant, 0, 7, 1, Material.LIGHT);
+        addBlockToStructure(structureMap, 0, 7, 1, Material.LIGHT, structureDirection);
 
 
         return structureMap;
@@ -68,40 +69,40 @@ public class Cross {
 
     private static void addBlockToStructure(
             Map<Vector, Material> structureMap,
-            int variant,
             int horizontal,
             int y,
             int depth,
-            Material material
+            Material material,
+            StructureDirection structureDirection
     ) {
-        switch (variant) {
-            case 0 -> structureMap.put(new Vector(-horizontal, y, -depth), material);
-            case 1 -> structureMap.put(new Vector(depth, y, horizontal), material);
-            case 2 -> structureMap.put(new Vector(horizontal, y, depth), material);
-            case 3 -> structureMap.put(new Vector(-depth, y, -horizontal), material);
+        switch (structureDirection) {
+            case SOUTH -> structureMap.put(new Vector(-horizontal, y, -depth), material);
+            case WEST -> structureMap.put(new Vector(depth, y, horizontal), material);
+            case NORTH -> structureMap.put(new Vector(horizontal, y, depth), material);
+            case EAST -> structureMap.put(new Vector(-depth, y, -horizontal), material);
         }
     }
 
-    public static void build(Player player, int startX, int startY, int startZ, int variant) {
+    public static void build(Player player, int startX, int startY, int startZ, StructureDirection structureDirection) {
         playMusic(player);
 
-        StructureBuilder.build(player, startX, startY, startZ, getStructureMap(variant));
+        StructureBuilder.build(player, startX, startY, startZ, getStructureMap(structureDirection));
 
-        switch (variant) {
-            case 0 -> NPC.spawnNpc(player, startX + 0.5, startY + 6.5, startZ - 0.1, 180, NPCSkin.JESUS);
-            case 1 -> NPC.spawnNpc(player, startX + 1.1, startY + 6.5, startZ + 0.5, 270, NPCSkin.JESUS);
-            case 2 -> NPC.spawnNpc(player, startX + 0.5, startY + 6.5, startZ + 1.1, 0, NPCSkin.JESUS);
-            case 3 -> NPC.spawnNpc(player, startX - 0.1, startY + 6.5, startZ + 0.5, 90, NPCSkin.JESUS);
+        switch (structureDirection) {
+            case SOUTH -> NPC.spawnNpc(player, startX + 0.5, startY + 6.5, startZ - 0.1, 180, NPCSkin.JESUS);
+            case WEST -> NPC.spawnNpc(player, startX + 1.1, startY + 6.5, startZ + 0.5, 270, NPCSkin.JESUS);
+            case NORTH -> NPC.spawnNpc(player, startX + 0.5, startY + 6.5, startZ + 1.1, 0, NPCSkin.JESUS);
+            case EAST -> NPC.spawnNpc(player, startX - 0.1, startY + 6.5, startZ + 0.5, 90, NPCSkin.JESUS);
         }
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                switch (variant) {
-                    case 0 -> spawnNiggas(player, startX, startY, startZ, 1, -1, -1, -1, 180);
-                    case 1 -> spawnNiggas(player, startX, startY, startZ, 1, 1, 1, -1, 270);
-                    case 2 -> spawnNiggas(player, startX, startY, startZ, -1, 1, 1, 1, 360);
-                    case 3 -> spawnNiggas(player, startX, startY, startZ, -1, -1, -1, 1, 90);
+                switch (structureDirection) {
+                    case SOUTH -> spawnNiggas(player, startX, startY, startZ, 1, -1, -1, -1, 180);
+                    case WEST -> spawnNiggas(player, startX, startY, startZ, 1, 1, 1, -1, 270);
+                    case NORTH -> spawnNiggas(player, startX, startY, startZ, -1, 1, 1, 1, 360);
+                    case EAST -> spawnNiggas(player, startX, startY, startZ, -1, -1, -1, 1, 90);
                 }
             }
         }.runTaskLater(plugin, 180);
