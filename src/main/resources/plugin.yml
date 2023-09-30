@@ -1,0 +1,9 @@
+name: Repentance
+version: '${project.version}'
+main: com.gayshit.repentance.Repentance
+api-version: 1.20
+depend: [NoteBlockAPI]
+commands:
+  pray:
+    description: Gives you a bible
+    usage: /<command>
